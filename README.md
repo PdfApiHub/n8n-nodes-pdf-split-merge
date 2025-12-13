@@ -1,8 +1,14 @@
 ![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
 
-# n8n-nodes-starter
+# n8n-nodes-pdf-split-merge
 
-This starter repository helps you build custom integrations for [n8n](https://n8n.io). It includes example nodes, credentials, the node linter, and all the tooling you need to get started.
+PDF Split & Merge for n8n using the PDFMunk API.
+
+This package adds a node that can:
+- Merge multiple PDF URLs into a single PDF
+- Split a PDF with a configurable mode (e.g., "each")
+
+Authentication and base URL mirror the Html-to-PDF node: the `CLIENT-API-KEY` is sent as a header to `https://pdfmunk.com/api/v1`.
 
 ## Quick Start
 
@@ -15,7 +21,7 @@ This starter repository helps you build custom integrations for [n8n](https://n8
 npm create @n8n/node
 ```
 
-**Already using this starter? Start developing with:**
+**Develop locally:**
 
 ```bash
 npm run dev
@@ -23,32 +29,33 @@ npm run dev
 
 This starts n8n with your nodes loaded and hot reload enabled.
 
-## What's Included
+## Credentials
 
-This starter repository includes two example nodes to learn from:
+Create a credential of type “PDFMunk API” and set your API key. The node sends:
 
-- **[Example Node](nodes/Example/)** - A simple starter node that shows the basic structure with a custom `execute` method
-- **[GitHub Issues Node](nodes/GithubIssues/)** - A complete, production-ready example built using the **declarative style**:
-  - **Low-code approach** - Define operations declaratively without writing request logic
-  - Multiple resources (Issues, Comments)
-  - Multiple operations (Get, Get All, Create)
-  - Two authentication methods (OAuth2 and Personal Access Token)
-  - List search functionality for dynamic dropdowns
-  - Proper error handling and typing
-  - Ideal for HTTP API-based integrations
+- Header: `CLIENT-API-KEY: <your-key>`
+- Content-Type: `application/json`
 
 > [!TIP]
 > The declarative/low-code style (used in GitHub Issues) is the recommended approach for building nodes that interact with HTTP APIs. It significantly reduces boilerplate code and handles requests automatically.
 
 Browse these examples to understand both approaches, then modify them or create your own.
 
-## Finding Inspiration
+## Node Operations
 
-Looking for more examples? Check out these resources:
+The node exposes two operations:
 
-- **[npm Community Nodes](https://www.npmjs.com/search?q=keywords:n8n-community-node-package)** - Browse thousands of community-built nodes on npm using the `n8n-community-node-package` tag
-- **[n8n Built-in Nodes](https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/nodes)** - Study the source code of n8n's official nodes for production-ready patterns and best practices
-- **[n8n Credentials](https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/credentials)** - See how authentication is implemented for various services
+- Merge PDF
+  - Endpoint: `POST https://pdfmunk.com/api/v1/pdf/merge`
+  - Parameters:
+    - `URLs` (array of strings) — list of PDF URLs to merge
+  - Returns: merged PDF URL and metadata
+- Split PDF
+  - Endpoint: `POST https://pdfmunk.com/api/v1/pdf/split`
+  - Parameters:
+    - `PDF URL` (string) — the PDF to split
+    - `Mode` (string) — free text, e.g. `each` (other modes supported by the API)
+  - Returns: array of split files and metadata
 
 These are excellent resources to understand how to structure your nodes, handle different API patterns, and implement advanced features.
 
@@ -91,32 +98,7 @@ npm install
 
 This installs all required dependencies including the `@n8n/node-cli`.
 
-### 3. Explore the Examples
-
-Browse the example nodes in [nodes/](nodes/) and [credentials/](credentials/) to understand the structure:
-
-- Start with [nodes/Example/](nodes/Example/) for a basic node
-- Study [nodes/GithubIssues/](nodes/GithubIssues/) for a real-world implementation
-
-### 4. Build Your Node
-
-Edit the example nodes to fit your use case, or create new node files by copying the structure from [nodes/Example/](nodes/Example/).
-
-> [!TIP]
-> If you want to scaffold a completely new node package, use `npm create @n8n/node` to start fresh with the CLI's interactive generator.
-
-### 5. Configure Your Package
-
-Update `package.json` with your details:
-
-- `name` - Your package name (must start with `n8n-nodes-`)
-- `author` - Your name and email
-- `repository` - Your repository URL
-- `description` - What your node does
-
-Make sure your node is registered in the `n8n.nodes` array.
-
-### 6. Develop and Test Locally
+### Develop and Test Locally
 
 Start n8n with your node loaded:
 
@@ -136,7 +118,7 @@ You can now test your node in n8n workflows!
 > [!NOTE]
 > Learn more about CLI commands in the [@n8n/node-cli documentation](https://www.npmjs.com/package/@n8n/node-cli).
 
-### 7. Lint Your Code
+### Lint Your Code
 
 Check for errors:
 
@@ -150,7 +132,7 @@ Auto-fix issues when possible:
 npm run lint:fix
 ```
 
-### 8. Build for Production
+### Build for Production
 
 When ready to publish:
 
@@ -160,7 +142,7 @@ npm run build
 
 This compiles your TypeScript code to the `dist/` folder.
 
-### 9. Prepare for Publishing
+### Prepare for Publishing
 
 Before publishing:
 
@@ -168,7 +150,7 @@ Before publishing:
 2. **Update the LICENSE**: Add your details to the [LICENSE](LICENSE.md) file.
 3. **Test thoroughly**: Ensure your node works in different scenarios.
 
-### 10. Publish to npm
+### Publish to npm
 
 Publish your package to make it available to the n8n community:
 
@@ -178,7 +160,7 @@ npm publish
 
 Learn more about [publishing to npm](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry).
 
-### 11. Submit for Verification (Optional)
+### Submit for Verification (Optional)
 
 Get your node verified for n8n Cloud:
 
