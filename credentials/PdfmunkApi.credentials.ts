@@ -45,7 +45,7 @@ export class PdfmunkApi implements ICredentialType {
 				'Content-Type': 'application/json',
 			},
 			body: {
-				urls: ['https://example.com/a.pdf', 'https://example.com/b.pdf'],
+				urls: ['https://generated-image.s3.ap-south-1.amazonaws.com/pdfs/1320a81a-4b17-484d-9ba7-32ab95e3726a.pdf', 'https://generated-image.s3.ap-south-1.amazonaws.com/pdfs/1320a81a-4b17-484d-9ba7-32ab95e3726a.pdf'],
 			},
 		},
 	};
