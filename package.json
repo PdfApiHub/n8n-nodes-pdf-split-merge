@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-pdf-split-merge",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "n8n community node to merge and split PDFs using the PdfMunk API",
 	"license": "MIT",
 	"homepage": "",
