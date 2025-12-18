@@ -10,7 +10,7 @@ export class PdfSplitMerge implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'PDF Split & Merge',
 		name: 'pdfSplitMerge',
-		icon: { light: 'file:../../icons/pdfapihub.light.svg', dark: 'file:../../icons/pdfapihub.dark.svg' },
+			icon: { light: 'file:../../icons/pdfapihub.light.svg', dark: 'file:../../icons/pdfapihub.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		description: 'Merge PDFs or split a PDF using PDF API Hub',
@@ -80,6 +80,11 @@ export class PdfSplitMerge implements INodeType {
 						name: 'File',
 						value: 'file',
 						description: 'Download the merged PDF as a file',
+					},
+					{
+						name: 'Base64',
+						value: 'base64',
+						description: 'Return the merged PDF as a Base64-encoded string',
 					},
 				],
 				default: 'url',
@@ -174,6 +179,11 @@ export class PdfSplitMerge implements INodeType {
 						name: 'File/ZIP',
 						value: 'file',
 						description: 'Download the split PDF(s) as file or ZIP',
+					},
+					{
+						name: 'Base64',
+						value: 'base64',
+						description: 'Return the split PDF(s) as Base64-encoded string(s)',
 					},
 				],
 				default: 'url',
