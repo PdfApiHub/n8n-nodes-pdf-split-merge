@@ -8,14 +8,14 @@ import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 export class PdfSplitMerge implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'PDF Split and PDF Merge',
+		displayName: 'PDF Split & Merge',
 		name: 'pdfSplitMerge',
 		icon: { light: 'file:../../icons/pdfhub.light.svg', dark: 'file:../../icons/pdfhub.dark.svg' },
 		group: ['transform'],
-		version: 2,
+		version: 1,
 		description: 'Merge PDFs or split a PDF using PDF API Hub',
 		defaults: {
-			name: 'PDF Split and PDF Merge',
+			name: 'PDF Split & Merge',
 		},
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
@@ -59,7 +59,7 @@ export class PdfSplitMerge implements INodeType {
 				},
 				default: [],
 				description: 'Array of PDF URLs to merge',
-				placeholder: 'https://pdfapihub.com/sample.pdf',
+				placeholder: 'https://example.com/a.pdf',
 				displayOptions: {
 					show: {
 						operation: ['mergePdf'],
@@ -80,11 +80,6 @@ export class PdfSplitMerge implements INodeType {
 						name: 'File',
 						value: 'file',
 						description: 'Download the merged PDF as a file',
-					},
-					{
-						name: 'Base64',
-						value: 'base64',
-						description: 'Return the merged PDF as a Base64-encoded string',
 					},
 				],
 				default: 'url',
@@ -180,11 +175,6 @@ export class PdfSplitMerge implements INodeType {
 						value: 'file',
 						description: 'Download the split PDF(s) as file or ZIP',
 					},
-					{
-						name: 'Base64',
-						value: 'base64',
-						description: 'Return the split PDF(s) as Base64-encoded string(s)',
-					},
 				],
 				default: 'url',
 				description: 'Whether to return URLs or download files',
@@ -257,5 +247,3 @@ export class PdfSplitMerge implements INodeType {
 		return [returnData];
 	}
 }
-
-
