@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-pdf-split-merge",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "n8n community node to merge and split PDFs using the PDF API Hub",
 	"license": "MIT",
 	"homepage": "",
