@@ -8,14 +8,14 @@ import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 
 export class PdfSplitMerge implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'PDF Split & Merge',
+		displayName: 'PDF Split and PDF Merge',
 		name: 'pdfSplitMerge',
 			icon: { light: 'file:../../icons/pdfapihub.light.svg', dark: 'file:../../icons/pdfapihub.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		description: 'Merge PDFs or split a PDF using PDF API Hub',
 		defaults: {
-			name: 'PDF Split & Merge',
+			name: 'PDF Split and PDF Merge',
 		},
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
@@ -59,7 +59,7 @@ export class PdfSplitMerge implements INodeType {
 				},
 				default: [],
 				description: 'Array of PDF URLs to merge',
-				placeholder: 'https://example.com/a.pdf',
+				placeholder: 'https://pdfapihub.com/sample.pdf',
 				displayOptions: {
 					show: {
 						operation: ['mergePdf'],
