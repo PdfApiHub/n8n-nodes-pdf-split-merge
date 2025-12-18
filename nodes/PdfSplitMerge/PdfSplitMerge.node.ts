@@ -10,9 +10,9 @@ export class PdfSplitMerge implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'PDF Split and PDF Merge',
 		name: 'pdfSplitMerge',
-			icon: { light: 'file:../../icons/pdfapihub.light.svg', dark: 'file:../../icons/pdfapihub.dark.svg' },
+		icon: { light: 'file:../../icons/pdfapihub.light.svg', dark: 'file:../../icons/pdfapihub.dark.svg' },
 		group: ['transform'],
-		version: 1,
+		version: 2,
 		description: 'Merge PDFs or split a PDF using PDF API Hub',
 		defaults: {
 			name: 'PDF Split and PDF Merge',
