@@ -10,10 +10,10 @@ export class PdfSplitMerge implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'PDF Split & Merge',
 		name: 'pdfSplitMerge',
-		icon: { light: 'file:../../icons/pdfmunk.light.svg', dark: 'file:../../icons/pdfmunk.dark.svg' },
+		icon: { light: 'file:../../icons/pdfapihub.light.svg', dark: 'file:../../icons/pdfapihub.dark.svg' },
 		group: ['transform'],
 		version: 1,
-		description: 'Merge PDFs or split a PDF using PDFMunk',
+		description: 'Merge PDFs or split a PDF using PDF API Hub',
 		defaults: {
 			name: 'PDF Split & Merge',
 		},
@@ -21,7 +21,7 @@ export class PdfSplitMerge implements INodeType {
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
-				name: 'pdfmunkApi',
+				name: 'pdfapihubApi',
 				required: true,
 			},
 		],
@@ -66,6 +66,30 @@ export class PdfSplitMerge implements INodeType {
 					},
 				},
 			},
+			{
+				displayName: 'Output Format',
+				name: 'output',
+				type: 'options',
+				options: [
+					{
+						name: 'URL',
+						value: 'url',
+						description: 'Return a URL to the merged PDF',
+					},
+					{
+						name: 'File',
+						value: 'file',
+						description: 'Download the merged PDF as a file',
+					},
+				],
+				default: 'url',
+				description: 'Whether to return a URL or download the file',
+				displayOptions: {
+					show: {
+						operation: ['mergePdf'],
+					},
+				},
+			},
 
 			// Split parameters
 			{
@@ -81,12 +105,79 @@ export class PdfSplitMerge implements INodeType {
 				},
 			},
 			{
-				displayName: 'Mode',
-				name: 'mode',
+				displayName: 'Split Type',
+				name: 'splitType',
+				type: 'options',
+				options: [
+					{
+						name: 'Specific Pages',
+						value: 'pages',
+						description: 'Extract specific pages',
+					},
+					{
+						name: 'Each Page',
+						value: 'each',
+						description: 'Split PDF into individual pages',
+					},
+					{
+						name: 'Chunks',
+						value: 'chunks',
+						description: 'Split PDF into multiple chunks',
+					},
+				],
+				default: 'pages',
+				description: 'How to split the PDF',
+				displayOptions: {
+					show: {
+						operation: ['splitPdf'],
+					},
+				},
+			},
+			{
+				displayName: 'Pages',
+				name: 'pages',
 				type: 'string',
-				default: 'each',
-				description:
-					'Split mode as text, for example "each". Other modes are supported by the API.',
+				default: '',
+				placeholder: '1-3,5',
+				description: 'Pages to extract (e.g., "1-3,5" or comma-separated page numbers)',
+				displayOptions: {
+					show: {
+						operation: ['splitPdf'],
+						splitType: ['pages'],
+					},
+				},
+			},
+			{
+				displayName: 'Number of Chunks',
+				name: 'chunks',
+				type: 'number',
+				default: 2,
+				description: 'Number of chunks to split the PDF into',
+				displayOptions: {
+					show: {
+						operation: ['splitPdf'],
+						splitType: ['chunks'],
+					},
+				},
+			},
+			{
+				displayName: 'Output Format',
+				name: 'output',
+				type: 'options',
+				options: [
+					{
+						name: 'URL',
+						value: 'url',
+						description: 'Return URLs to the split PDF(s)',
+					},
+					{
+						name: 'File/ZIP',
+						value: 'file',
+						description: 'Download the split PDF(s) as file or ZIP',
+					},
+				],
+				default: 'url',
+				description: 'Whether to return URLs or download files',
 				displayOptions: {
 					show: {
 						operation: ['splitPdf'],
@@ -104,17 +195,28 @@ export class PdfSplitMerge implements INodeType {
 			try {
 				const operation = this.getNodeParameter('operation', i) as string;
 				let body: Record<string, unknown> = {};
-				let url = '';
+				const url = `https://pdfapihub.com/api/v1/pdf/${operation === 'mergePdf' ? 'merge' : 'split'}`;
 
 				if (operation === 'mergePdf') {
 					const urls = this.getNodeParameter('urls', i) as string[];
-					body = { urls };
-					url = 'https://pdfmunk.com/api/v1/pdf/merge';
+					const output = this.getNodeParameter('output', i) as string;
+					body = { urls, output };
 				} else if (operation === 'splitPdf') {
 					const pdfUrl = this.getNodeParameter('url', i) as string;
-					const mode = this.getNodeParameter('mode', i) as string;
-					body = { url: pdfUrl, mode };
-					url = 'https://pdfmunk.com/api/v1/pdf/split';
+					const splitType = this.getNodeParameter('splitType', i) as string;
+					const output = this.getNodeParameter('output', i) as string;
+					
+					body = { url: pdfUrl, output };
+					
+					if (splitType === 'pages') {
+						const pages = this.getNodeParameter('pages', i) as string;
+						body.pages = pages;
+					} else if (splitType === 'each') {
+						body.mode = 'each';
+					} else if (splitType === 'chunks') {
+						const chunks = this.getNodeParameter('chunks', i) as number;
+						body.chunks = chunks;
+					}
 				} else {
 					throw new NodeOperationError(this.getNode(), `Unsupported operation: ${operation}`, {
 						itemIndex: i,
@@ -123,7 +225,7 @@ export class PdfSplitMerge implements INodeType {
 
 				const responseData = await this.helpers.httpRequestWithAuthentication.call(
 					this,
-					'pdfmunkApi',
+					'pdfapihubApi',
 					{
 						method: 'POST',
 						url,

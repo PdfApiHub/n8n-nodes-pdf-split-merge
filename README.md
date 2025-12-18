@@ -2,13 +2,13 @@
 
 # n8n-nodes-pdf-split-merge
 
-PDF Split & Merge for n8n using the PDFMunk API.
+PDF Split & Merge for n8n using the PDF API Hub.
 
 This package adds a node that can:
 - Merge multiple PDF URLs into a single PDF
 - Split a PDF with a configurable mode (e.g., "each")
 
-Authentication and base URL mirror the Html-to-PDF node: the `CLIENT-API-KEY` is sent as a header to `https://pdfmunk.com/api/v1`.
+Authentication and base URL: the `CLIENT-API-KEY` is sent as a header to `https://pdfapihub.com/api/v1`.
 
 ## Quick Start
 
@@ -31,7 +31,7 @@ This starts n8n with your nodes loaded and hot reload enabled.
 
 ## Credentials
 
-Create a credential of type “PDFMunk API” and set your API key. The node sends:
+Create a credential of type "PDF API Hub" and set your API key. The node sends:
 
 - Header: `CLIENT-API-KEY: <your-key>`
 - Content-Type: `application/json`
@@ -46,16 +46,20 @@ Browse these examples to understand both approaches, then modify them or create 
 The node exposes two operations:
 
 - Merge PDF
-  - Endpoint: `POST https://pdfmunk.com/api/v1/pdf/merge`
+  - Endpoint: `POST https://pdfapihub.com/api/v1/pdf/merge`
   - Parameters:
     - `URLs` (array of strings) — list of PDF URLs to merge
-  - Returns: merged PDF URL and metadata
+    - `Output Format` (url/file) — return URL or download file
+  - Returns: merged PDF URL or file
 - Split PDF
-  - Endpoint: `POST https://pdfmunk.com/api/v1/pdf/split`
+  - Endpoint: `POST https://pdfapihub.com/api/v1/pdf/split`
   - Parameters:
     - `PDF URL` (string) — the PDF to split
-    - `Mode` (string) — free text, e.g. `each` (other modes supported by the API)
-  - Returns: array of split files and metadata
+    - `Split Type` (pages/each/chunks) — how to split the PDF
+    - `Pages` (string) — specific pages to extract (e.g., "1-3,5")
+    - `Number of Chunks` (number) — number of chunks to split into
+    - `Output Format` (url/file) — return URLs or download files/ZIP
+  - Returns: split PDF URLs or files
 
 These are excellent resources to understand how to structure your nodes, handle different API patterns, and implement advanced features.
 

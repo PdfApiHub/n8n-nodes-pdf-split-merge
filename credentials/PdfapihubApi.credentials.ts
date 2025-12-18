@@ -6,13 +6,13 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class PdfmunkApi implements ICredentialType {
-	name = 'pdfmunkApi';
-	displayName = 'PDFMunk API';
-	documentationUrl = 'https://www.pdfmunk.com/api-docs';
+export class PdfapihubApi implements ICredentialType {
+	name = 'pdfapihubApi';
+	displayName = 'PDF API Hub API';
+	documentationUrl = 'https://pdfapihub.com/docs';
 	icon: Icon = {
-		light: 'file:../icons/pdfmunk.light.svg',
-		dark: 'file:../icons/pdfmunk.dark.svg'
+		light: 'file:../icons/pdfapihub.light.svg',
+		dark: 'file:../icons/pdfapihub.dark.svg'
 	};
 	properties: INodeProperties[] = [
 		{
@@ -37,7 +37,7 @@ export class PdfmunkApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://pdfmunk.com',
+			baseURL: 'https://pdfapihub.com',
 			url: '/api/v1/pdf/merge',
 			method: 'POST',
 			headers: {
@@ -45,7 +45,8 @@ export class PdfmunkApi implements ICredentialType {
 				'Content-Type': 'application/json',
 			},
 			body: {
-				urls: ['https://generated-image.s3.ap-south-1.amazonaws.com/pdfs/1320a81a-4b17-484d-9ba7-32ab95e3726a.pdf', 'https://generated-image.s3.ap-south-1.amazonaws.com/pdfs/1320a81a-4b17-484d-9ba7-32ab95e3726a.pdf'],
+				urls: ['https://pdfapihub.com/sample1.pdf', 'https://pdfapihub.com/sample1.pdf'],
+				output: 'url',
 			},
 		},
 	};

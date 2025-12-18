@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-pdf-split-merge",
 	"version": "0.1.3",
-	"description": "n8n community node to merge and split PDFs using the PdfMunk API",
+	"description": "n8n community node to merge and split PDFs using the PDF API Hub",
 	"license": "MIT",
 	"homepage": "",
 	"keywords": [
@@ -11,7 +11,7 @@
 		"pdf-split",
 		"merge-pdf",
 		"split-pdf",
-		"pdfmunk",
+		"pdfapihub",
 		"documents",
 		"document-processing",
 		"pdf-tools",
@@ -24,7 +24,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/PdfMunk/n8n-nodes-pdf-split-merge.git"
+		"url": "https://github.com/Pdfapihub/n8n-nodes-pdf-split-merge.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",
@@ -42,7 +42,7 @@
 		"n8nNodesApiVersion": 1,
 		"strict": true,
 		"credentials": [
-			"dist/credentials/PdfmunkApi.credentials.js"
+			"dist/credentials/PdfapihubApi.credentials.js"
 		],
 		"nodes": [
 			"dist/nodes/PdfSplitMerge/PdfSplitMerge.node.js"
