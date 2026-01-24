@@ -35,7 +35,7 @@ export class PdfSplitMerge implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'PDF Utilities',
+						name: 'PDF Utility',
 						value: 'pdf',
 					},
 				],
