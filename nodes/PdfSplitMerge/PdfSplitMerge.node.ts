@@ -1,5 +1,6 @@
 import type {
 	IExecuteFunctions,
+	IDataObject,
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
@@ -28,10 +29,28 @@ export class PdfSplitMerge implements INodeType {
 		usableAsTool: true,
 		properties: [
 			{
+				displayName: 'Resource',
+				name: 'resource',
+				type: 'options',
+				noDataExpression: true,
+				options: [
+					{
+						name: 'PDF Utilities',
+						value: 'pdf',
+					},
+				],
+				default: 'pdf',
+			},
+			{
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['pdf'],
+					},
+				},
 				options: [
 					{
 						name: 'Merge PDF',
@@ -62,35 +81,7 @@ export class PdfSplitMerge implements INodeType {
 				placeholder: 'https://pdfapihub.com/sample.pdf',
 				displayOptions: {
 					show: {
-						operation: ['mergePdf'],
-					},
-				},
-			},
-			{
-				displayName: 'Output Format',
-				name: 'output',
-				type: 'options',
-				options: [
-					{
-						name: 'URL',
-						value: 'url',
-						description: 'Return a URL to the merged PDF',
-					},
-					{
-						name: 'File',
-						value: 'file',
-						description: 'Download the merged PDF as a file',
-					},
-					{
-						name: 'Base64',
-						value: 'base64',
-						description: 'Return the merged PDF as a Base64-encoded string',
-					},
-				],
-				default: 'url',
-				description: 'Whether to return a URL or download the file',
-				displayOptions: {
-					show: {
+						resource: ['pdf'],
 						operation: ['mergePdf'],
 					},
 				},
@@ -105,6 +96,7 @@ export class PdfSplitMerge implements INodeType {
 				description: 'The PDF URL to split',
 				displayOptions: {
 					show: {
+						resource: ['pdf'],
 						operation: ['splitPdf'],
 					},
 				},
@@ -134,6 +126,7 @@ export class PdfSplitMerge implements INodeType {
 				description: 'How to split the PDF',
 				displayOptions: {
 					show: {
+						resource: ['pdf'],
 						operation: ['splitPdf'],
 					},
 				},
@@ -147,6 +140,7 @@ export class PdfSplitMerge implements INodeType {
 				description: 'Pages to extract (e.g., "1-3,5" or comma-separated page numbers)',
 				displayOptions: {
 					show: {
+						resource: ['pdf'],
 						operation: ['splitPdf'],
 						splitType: ['pages'],
 					},
@@ -160,37 +154,48 @@ export class PdfSplitMerge implements INodeType {
 				description: 'Number of chunks to split the PDF into',
 				displayOptions: {
 					show: {
+						resource: ['pdf'],
 						operation: ['splitPdf'],
 						splitType: ['chunks'],
 					},
 				},
 			},
 			{
-				displayName: 'Output Format',
-				name: 'output',
-				type: 'options',
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
 				options: [
 					{
-						name: 'URL',
-						value: 'url',
-						description: 'Return URLs to the split PDF(s)',
-					},
-					{
-						name: 'File/ZIP',
-						value: 'file',
-						description: 'Download the split PDF(s) as file or ZIP',
-					},
-					{
-						name: 'Base64',
-						value: 'base64',
-						description: 'Return the split PDF(s) as Base64-encoded string(s)',
+						displayName: 'Output Format',
+						name: 'output',
+						type: 'options',
+						options: [
+							{
+								name: 'URL',
+								value: 'url',
+								description: 'Return a URL (or URLs) to the PDF result',
+							},
+							{
+								name: 'File/ZIP',
+								value: 'file',
+								description: 'Return the PDF result as a file (or ZIP for multiple)',
+							},
+							{
+								name: 'Base64',
+								value: 'base64',
+								description: 'Return the PDF result as a Base64-encoded string',
+							},
+						],
+						default: 'url',
+						description: 'Choose how the API should return the result',
 					},
 				],
-				default: 'url',
-				description: 'Whether to return URLs or download files',
 				displayOptions: {
 					show: {
-						operation: ['splitPdf'],
+						resource: ['pdf'],
+						operation: ['mergePdf', 'splitPdf'],
 					},
 				},
 			},
@@ -204,17 +209,18 @@ export class PdfSplitMerge implements INodeType {
 		for (let i = 0; i < items.length; i++) {
 			try {
 				const operation = this.getNodeParameter('operation', i) as string;
+				const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as IDataObject;
 				let body: Record<string, unknown> = {};
 				const url = `https://pdfapihub.com/api/v1/pdf/${operation === 'mergePdf' ? 'merge' : 'split'}`;
 
 				if (operation === 'mergePdf') {
 					const urls = this.getNodeParameter('urls', i) as string[];
-					const output = this.getNodeParameter('output', i) as string;
+					const output = (additionalOptions.output as string) ?? 'url';
 					body = { urls, output };
 				} else if (operation === 'splitPdf') {
 					const pdfUrl = this.getNodeParameter('url', i) as string;
 					const splitType = this.getNodeParameter('splitType', i) as string;
-					const output = this.getNodeParameter('output', i) as string;
+					const output = (additionalOptions.output as string) ?? 'url';
 					
 					body = { url: pdfUrl, output };
 					

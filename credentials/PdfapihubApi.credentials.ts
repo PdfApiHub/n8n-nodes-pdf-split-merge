@@ -41,7 +41,6 @@ export class PdfapihubApi implements ICredentialType {
 			url: '/api/v1/pdf/merge',
 			method: 'POST',
 			headers: {
-				'CLIENT-API-KEY': '={{$credentials.apiKey}}',
 				'Content-Type': 'application/json',
 			},
 			body: {
